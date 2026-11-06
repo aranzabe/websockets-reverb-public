@@ -10,8 +10,10 @@ const wsHost = '127.0.0.1';
 const wsPort = '8080';
 const apiPort = '8000';
 
+const userId = crypto.randomUUID();  // Generamos un ID de usuario único para esta sesión
+
 // Configuración Pusher para Reverb
-const pusher = new Pusher('app-Key-client-reverb', {
+const pusher = new Pusher('wcx1ovp8nygqv3gxm0c3', {
     wsHost: wsHost,
     wsPort: wsPort,
     forceTLS: false,
@@ -60,8 +62,13 @@ pusher.connection.bind('error', (err) => {
 // ======== Recepción de mensajes en tiempo real ========
 channel.bind('message.sent', (data) => {
     console.log('Mensaje recibido desde servidor:', data.message);
+    console.log('ID de usuario:', data.user_id);
+    console.log('Marca de tiempo:', data.timestamp);
     const li = document.createElement('li');
+    // Agregamos el mensaje a la lista
+    //li.textContent = data.message + ' (ID: ' + data.user_id + ', Timestamp: ' + data.timestamp + ')';
     li.textContent = data.message;
+
     li.classList.add('list-group-item');
     ulMessages.appendChild(li);
 });
@@ -73,8 +80,8 @@ btnEnviar.addEventListener('click', () => {
 
     const payload = {
         message: mensaje,
-        //user_id: '1A',
-        timestamp: new Date().toISOString(),
+        //user_id: userId,
+        //timestamp: new Date().toISOString(),
     };
 
     // Usamos wsHost para construir la URL dinámicamente
